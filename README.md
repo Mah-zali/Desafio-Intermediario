@@ -18,7 +18,4 @@ Projetos acadêmicos, como trabalhos de curso e atividades avaliativas.
 ### 💡 Pessoais
 Projetos criados por iniciativa própria, para fins de estudo, prática e experimentar diferentes trabalhos.
 
-### 🧠 Experiências
-Projetos, trabalhos e experiências pessoais/acadêmicas.
-
 ---
