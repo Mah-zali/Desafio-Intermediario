@@ -6,7 +6,7 @@ Este repositório reúne projetos acadêmicos e pessoais desenvolvidos por Maria
 
 ## 🔗 Contatos
 - [LinkedIn](https://www.linkedin.com/in/mariana-mazali-847896378/)
-- [E-mail](mariana.mazali@sempreceub.com)
+- [E-mail](mailto:mariana.mazali@sempreceub.com)
 
 ---
 
