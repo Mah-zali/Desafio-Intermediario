@@ -1,22 +1,8 @@
-# RPG: A Jornada em Godsgrave - Capítulo 1 + Mercado
-# Autor: (seu nome aqui)
-# Linguagem: Python
-# Projeto de Introdução à Computação
-# -------------------------------
-# Recursos:
-# - Criação de personagem com classes, artefatos e atributos
-# - Sistema de XP / nível / ouro
-# - Mercado com compras e bônus permanentes
-# - Batalha com narrativa (Hydra)
-# - Habilidade especial única por batalha
-# -------------------------------
-
 import time
 import random
 
-# --------------------------------
 # Funções auxiliares de estilo
-# --------------------------------
+
 def pausa(segundos=1.0):
     time.sleep(segundos)
 
@@ -27,55 +13,53 @@ def estilo(texto):
     print(texto)
     pausa(0.8)
 
-# --------------------------------
 # Configurações gerais
-# --------------------------------
+
 MAX_LEVEL = 100
 XP_POR_NIVEL = 150
 
 ARTEFATOS = {
-    "mago": {
+    "Mago": {
         "cajado": {"ataque": 10, "descricao": "Um cajado antigo que pulsa com energia arcana (+10 ataque)."},
         "livro": {"ataque": 8, "agilidade": 5, "descricao": "Um tomo de feitiços: sabedoria enraizada (+8 ataque, +5 agilidade)."}
     },
-    "guerreiro": {
+    "Guerreiro": {
         "espada": {"ataque": 12, "descricao": "Uma espada afiada, forjada para combater (+12 ataque)."},
-        "lanca": {"ataque": 10, "velocidade": 5, "descricao": "Uma lança longa e ágil (+10 ataque, +5 velocidade)."}
+        "lança": {"ataque": 10, "velocidade": 5, "descricao": "Uma lança longa que permite ataques precisos (+10 ataque, +5 velocidade)."}
     },
-    "curandeiro": {
+    "Curandeiro": {
         "poção": {"defesa": 10, "descricao": "Poção antiga que reforça sua resistência (+10 defesa)."},
-        "amuleto": {"defesa": 8, "agilidade": 5, "descricao": "Amuleto de proteção em grupo (+8 defesa, +5 agilidade)."}
+        "amuleto": {"defesa": 8, "agilidade": 5, "descricao": "Amuleto de proteção em grupo, sussurra proteção (+8 defesa, +5 agilidade)."}
     },
-    "explorador": {
-        "mapa": {"agilidade": 10, "descricao": "Mapa com atalhos secretos (+10 agilidade)."},
-        "botas": {"velocidade": 15, "descricao": "Botas leves de couro (+15 velocidade)."}
+    "Explorador": {
+        "mapa": {"agilidade": 10, "descricao": "Mapa com atalhos: encontra caminhos mais rápidos e secretos (+10 agilidade)."},
+        "botas": {"velocidade": 15, "descricao": "Botas leves de couro que aumentam sua velocidade (+15 velocidade)."}
     }
 }
 
 HABILIDADES = {
-    "mago": {"nome": "Bola de Fogo", "descricao": "Lança uma esfera flamejante devastadora."},
-    "guerreiro": {"nome": "Golpe Fatal", "descricao": "Ataque brutal mirando um ponto vital."},
-    "curandeiro": {"nome": "Regeneração Completa", "descricao": "Restaura grande parte da vida."},
-    "explorador": {"nome": "Invisibilidade", "descricao": "Fica invisível por um instante e ataca furtivamente."}
+    "Mago": {"nome": "Bola de Fogo", "descricao": "Lança uma esfera flamejante devastadora que atinge o alvo."},
+    "Guerreiro": {"nome": "Golpe Fatal", "descricao": "Ataque brutal mirando um ponto vital."},
+    "Curandeiro": {"nome": "Regeneração Completa", "descricao": "Restaura forças e cura ferimentos (uso em batalha)."},
+    "Explorador": {"nome": "Invisibilidade", "descricao": "Suma dos olhos do inimigo e desfere um ataque surpresa."}
 }
 
-# --------------------------------
 # Funções principais
-# --------------------------------
+
 def criar_personagem():
     linha()
     estilo("🌆 Godsgrave — a cidade das mil histórias e tavernas iluminadas por velas.")
-    estilo("Entre e escolha seu destino...")
+    estilo("Entre nessa praça cheia de viajantes e escolha seu destino...")
 
     nome = input("Escolha o nome do seu herói: ").strip() or "Herói sem Nome"
     linha()
 
-    classes = ["mago", "guerreiro", "curandeiro", "explorador"]
+    classes = ["Mago", "Guerreiro", "Curandeiro", "Explorador"]
     estilo("Escolha sua classe:")
     for i, c in enumerate(classes, 1):
         print(f"{i} - {c.title()}")
     escolha = input("Classe: ").strip()
-    classe = classes[int(escolha) - 1] if escolha in ["1", "2", "3", "4"] else "explorador"
+    classe = classes[int(escolha) - 1] if escolha in ["1", "2", "3", "4"] else "Explorador"
 
     estilo(f"Você escolheu {classe.title()}. Agora selecione um artefato inicial:")
     itens = ARTEFATOS[classe]
@@ -99,7 +83,7 @@ def criar_personagem():
         "atributos": atributos,
         "nivel": 1,
         "xp": 0,
-        "ouro": 200,  # começa com 200 moedas
+        "ouro": 200,  # começa com 200 
         "habilidade_usada": False
     }
 
@@ -123,71 +107,178 @@ def tentar_subir_nivel(p):
         p["atributos"]["hp"] += 10
         estilo(f"✨ {p['nome']} subiu para o nível {p['nivel']}! A força cresce em suas veias.")
 
-# --------------------------------
-# MERCADO
-# --------------------------------
-def mercado(personagem):
+# Mercadinho
+
+import random
+
+def mostrar_inventario(personagem):
+    """Mostra os itens que o jogador possui"""
     linha()
-    estilo("🏪 Bem-vindo ao Mercado de Godsgrave!")
-    estilo("O comerciante gorducho sorri: 'Tenho o que você precisa, aventureiro!'")
-    itens = {
-        "1": {"nome": "Poção de Vida", "preco": 50, "efeito": ("hp", 30)},
-        "2": {"nome": "Aprimorar Ataque (+10)", "preco": 100, "efeito": ("ataque", 10)},
-        "3": {"nome": "Aprimorar Defesa (+10)", "preco": 100, "efeito": ("defesa", 10)},
-        "4": {"nome": "Aprimorar Agilidade (+10)", "preco": 100, "efeito": ("agilidade", 10)},
-        "5": {"nome": "Sair do mercado", "preco": 0, "efeito": None}
+    estilo(f"🎒 Inventário de {personagem['nome']}:")
+    if "inventario" not in personagem or len(personagem["inventario"]) == 0:
+        print("   (vazio)")
+    else:
+        for i, item in enumerate(personagem["inventario"], 1):
+            print(f"   {i}. {item}")
+    linha()
+
+
+def mercado(personagem):
+    estilo("🏪 Você chega à Loja Mística de Godsgrave...")
+    print("O som de sinos mágicos ecoa enquanto você entra. Um velho elfo sorri por trás do balcão, polindo uma lâmina antiga.")
+    estilo("'Bem-vindo, viajante... trago artefatos para todas as classes. Mas cuidado: alguns têm vontade própria.'")
+
+    # Garante que o personagem tenha um inventário
+    if "inventario" not in personagem:
+        personagem["inventario"] = []
+
+    # Itens por classe
+    itens_por_classe = {
+        "Mago": {
+            "1": {"nome": "📜 Grimório das Chamas Eternas", "preco": 200, "efeito": ("ataque", 40),
+                  "descricao": "Um livro proibido que ensina o feitiço ancestral de fogo (+40 ataque)."},
+            "2": {"nome": "🔮 Orbe do Caos", "preco": 300, "efeito": ("ataque", 60),
+                  "descricao": "Um artefato instável, pulsando energia arcana (+60 ataque)."},
+            "3": {"nome": "🧪 Poção de Vitalidade Dracônica", "preco": 80, "efeito": ("hp", 50),
+                  "descricao": "Restaura 50 pontos de vida com essência da Hydra."}
+        },
+        "Guerreiro": {
+            "1": {"nome": "⚔️ Espada Rúnica da Lua", "preco": 200, "efeito": ("ataque", 25),
+                  "descricao": "Forjada por guerreiros lunares, aumenta ataque em +25."},
+            "2": {"nome": "🛡️ Escudo de Hydra", "preco": 180, "efeito": ("defesa", 30),
+                  "descricao": "Feito das escamas da Hydra, concede +30 defesa."},
+            "3": {"nome": "🩸 Elixir de Fúria", "preco": 250, "efeito": ("ataque", 50),
+                  "descricao": "Infunde raiva em seu sangue, aumentando muito o ataque (+50)."}
+        },
+        "Curandeiro": {
+            "1": {"nome": "💫 Amuleto de Luz Sagrada", "preco": 150, "efeito": ("defesa", 20),
+                  "descricao": "Criação dos curandeiros do templo, concede +20 defesa."},
+            "2": {"nome": "🌿 Bastão da Serenidade", "preco": 200, "efeito": ("hp", 80),
+                  "descricao": "Emana energia curativa natural, restaurando 80 de vida."},
+            "3": {"nome": "🌟 Elixir da Maestria", "preco": 300, "efeito": ("xp", 150),
+                  "descricao": "Concede 150 de experiência instantânea."}
+        },
+        "Explorador": {
+            "1": {"nome": "👢 Botas do Vento Prateado", "preco": 160, "efeito": ("velocidade", 20),
+                  "descricao": "Aumenta sua velocidade e reflexos em +20."},
+            "2": {"nome": "🏹 Arco das Sombras", "preco": 250, "efeito": ("ataque", 35),
+                  "descricao": "Criado com madeira dos bosques antigos, concede +35 ataque."},
+            "3": {"nome": "🧭 Relógio dos Caminhos", "preco": 180, "efeito": ("agilidade", 25),
+                  "descricao": "Guia o usuário e aumenta +25 de agilidade."}
+        }
     }
 
+    # Itens raros do mercador misterioso
+    raridades = [
+        {"nome": "💎 Lâmina do Tempo", "preco": 400, "efeito": ("ataque", 80),
+         "descricao": "Dizem que corta até o próprio destino (+80 ataque)."},
+        {"nome": "🔥 Coração de Salamandra", "preco": 350, "efeito": ("hp", 120),
+         "descricao": "Um fragmento ardente que concede 120 de vida."},
+        {"nome": "🕯️ Véu do Crepúsculo", "preco": 300, "efeito": ("defesa", 50),
+         "descricao": "Oculta o usuário nas sombras, concedendo +50 defesa."}
+    ]
+    raros_disponiveis = random.sample(raridades, 1)
+
+    classe = personagem["classe"]
+    itens = itens_por_classe[classe]
+
     while True:
-        mostrar_status(personagem)
-        for i, item in itens.items():
-            print(f"{i} - {item['nome']} (💰 {item['preco']})")
-        escolha = input("O que deseja comprar? ").strip()
-        if escolha == "5":
-            estilo("Você se despede do comerciante e volta à jornada.")
+        estilo(f"\n✨ Itens disponíveis para {classe}:")
+        for chave, item in itens.items():
+            print(f"[{chave}] {item['nome']} - {item['preco']} ouro\n   ➤ {item['descricao']}")
+        print("\n[R] Falar com o mercador misterioso")
+        print("[I] Ver inventário")
+        print("[0] Sair da loja")
+
+        escolha = input("\nO que deseja fazer? ").strip().upper()
+
+        if escolha == "0":
+            estilo("'Volte sempre, viajante... que os ventos de Godsgrave guiem sua jornada.'")
             break
+
+        if escolha == "I":
+            mostrar_inventario(personagem)
+            continue
+
+        if escolha == "R":
+            estilo("🕯️ Uma figura encapuzada surge das sombras... 'Tenho algo que pode mudar o curso do seu destino...'")
+            item = raros_disponiveis[0]
+            print(f"\n💎 {item['nome']} - {item['preco']} ouro\n   ➤ {item['descricao']}")
+            confirmar = input("\nDeseja comprá-lo? (s/n): ").strip().lower()
+            if confirmar == "s":
+                comprar_item(personagem, item)
+            else:
+                estilo("O mercador sorri em silêncio e desaparece...")
+            continue
+
         if escolha not in itens:
-            estilo("Escolha inválida.")
+            estilo("❌ Escolha inválida. Tente novamente.")
             continue
 
         item = itens[escolha]
-        if personagem["ouro"] < item["preco"]:
-            estilo("Você não tem ouro suficiente!")
-            continue
+        comprar_item(personagem, item)
 
-        personagem["ouro"] -= item["preco"]
-        atributo, valor = item["efeito"]
-        personagem["atributos"][atributo] += valor
-        estilo(f"Você comprou {item['nome']}! (+{valor} em {atributo.upper()})")
 
-# --------------------------------
+def comprar_item(personagem, item):
+    """Executa a compra e aplica o efeito do item"""
+    # Garante inventário (caso a função seja chamada de fora do mercado)
+    if "inventario" not in personagem:
+        personagem["inventario"] = []
+
+    if personagem["ouro"] < item["preco"]:
+        estilo("💰 Você não tem ouro suficiente!")
+        return
+
+    personagem["ouro"] -= item["preco"]
+    tipo, valor = item["efeito"]
+
+    if tipo == "xp":
+        personagem["xp"] += valor
+        estilo(f"✨ Você sente o poder fluir! (+{valor} XP)")
+    else:
+        # Aplica o efeito dentro do dicionário de atributos
+        if tipo not in personagem["atributos"]:
+            personagem["atributos"][tipo] = 0
+        personagem["atributos"][tipo] += valor
+        estilo(f"✅ {item['nome']} adquirido! Seu {tipo} aumentou em +{valor}.")
+
+    # Adiciona ao inventário
+    personagem["inventario"].append(item["nome"])
+    estilo(f"📦 {item['nome']} foi adicionado ao seu inventário!")
+    estilo(f"💰 Ouro restante: {personagem['ouro']}")
+
 # BATALHA: Hydra
-# --------------------------------
+
 def capitulo_hydra(personagem):
-    estilo("\n🌫️ Capítulo 1: A Caverna e a Hydra 🌫️")
-    estilo("Você caminha pela floresta sombria até encontrar uma caverna coberta por névoa.")
-    estilo("Três olhos brilhantes o encaram no escuro... A HYDRA desperta!")
+    estilo("\n— Capítulo 1: A Caverna e a Hydra —")
+    estilo("Após percorrer as ruelas e as tavernas de Godsgrave, você segue rumo à floresta.")
+    estilo("Depois de alguma caminhada, entre troncos e neblina, uma boca escura se abre: uma caverna.")
+    estilo("Você entra. O ar cheira a enxofre. Esconderijos e ossos quebrados no chão... algo se move nas sombras.")
+    estilo("E então: três cabeças, olhos amarelos e um rugido que estremece as paredes. A HYDRA!")
 
     # ataque inicial
-    estilo("A Hydra lança um jato de veneno! Sua defesa é reduzida em 15 pontos.")
+    estilo("A Hydra ergue a cabeça e lança um jato de veneno! Sua defesa é reduzida em 15 pontos.")
     personagem["atributos"]["defesa"] = max(0, personagem["atributos"]["defesa"] - 15)
     mostrar_status(personagem)
 
-    estilo("Deseja (1) Fugir para Godsgrave ou (2) Lutar?")
+    estilo("Deseja (1) Fugir para Godsgrave ou (2) Enfrentar a Hydra aqui e agora?")
     escolha = input("Escolha: ").strip()
     if escolha == "1":
-        estilo("Você recua para a cidade. Missão abortada.")
-        return
+        estilo("\nVocê opta pela prudência: retorna a Godsgrave para descansar. Missão abortada.")
+        estilo("Nenhuma recompensa ganha. Volte quando estiver mais preparado.")
+        return 
 
     estilo("Você decide lutar bravamente!")
     personagem["atributos"]["hp"] -= 10
-    estilo("A Hydra usa 'Veneno Cortante'! Você sofre 10 de dano.")
+    estilo("A Hydra ruge e desfere seu ataque: 'Veneno Cortante'! Você sofre 10 de dano.")
     if personagem["atributos"]["hp"] <= 0:
-        estilo("Você caiu. Fim de jornada.")
+        estilo("Você caiu sob o golpe mortal. Fim de jornada.")
         return
 
     hydra_hp = 100
-    estilo("Seu turno! (1) Ataque normal (10 dano) | (2) Habilidade especial (50 + 2*Nível de dano)")
+    dano_especial = 50 + 2 * personagem["nivel"]
+    estilo(f"Seu turno! (1) Ataque normal (10 de dano) | (2) Habilidade especial ({dano_especial} de dano)")
+
     escolha = input("Escolha: ").strip()
     if escolha == "1":
         dano = 10
@@ -205,16 +296,16 @@ def capitulo_hydra(personagem):
     mostrar_status(personagem)
 
     # fase do abraço da morte
-    estilo("A Hydra tenta um 'Abraço da Morte'!")
+    estilo("Com um movimento horrendo a Hydra tenta um 'Abraço da Morte'! - todas as cabeças se aproximam para esmagar você.")
     estilo("Você (1) Desvia para contra-atacar ou (2) Mira em um ponto vital?")
     escolha = input("Escolha: ").strip()
 
     if escolha == "2":
-        estilo("Você encontra o ponto vital e golpeia — a Hydra ruge e desaba!")
+        estilo("Você reúne coragem e mira num ponto cego entre as cabeças. Um golpe perfeito... a Hydra ruge e desaba!")
         recompensa_final(personagem, "atacar")
         return
     else:
-        estilo("Você desvia e desfere um contra-ataque causando +20 de dano!")
+        estilo("Você escapa do abraço no último segundo e desfere um contra-ataque, causando +20 de dano!")
         hydra_hp -= 20
         personagem["atributos"]["hp"] -= 10
         estilo("A Hydra lança mais veneno! Você perde 10 de HP.")
@@ -223,16 +314,17 @@ def capitulo_hydra(personagem):
             return
 
     # último turno
-    estilo("Última chance! (1) Ataques repetidos ou (2) Procurar brecha mortal?")
+    estilo("Última chance! (1) Atacar repetidamente com tudo o que tem ou (2) Procurar brecha mortal?")
     escolha = input("Escolha: ").strip()
     if escolha == "1":
-        estilo("Você golpeia furiosamente até a Hydra cair!")
+        estilo("Você golpeia furiosamente, golpe após golpe, até a Hydra cair!")
         personagem["ouro"] += 150
         personagem["atributos"]["defesa"] += 50
         personagem["xp"] += 200
-        estilo("🏆 Recompensa: +150 ouro, Armadura de Escamas (+50 defesa), +200 XP.")
+        estilo("🏆 Recompensa: +150 ouro, Armadura de Escamas de Dragão (+50 defesa), +200 XP.")
     else:
-        estilo("Você acha a brecha e atinge o coração da criatura!")
+        estilo("\nVocê observa, respira fundo e procura pela fresta entre as escamas. Encontra o ponto fraco!")
+        estilo("Um ataque certeiro: a Hydra cai, derrotada por sua determinação e astúcia.")
         personagem["ouro"] += 150
         personagem["atributos"]["ataque"] += 50
         personagem["xp"] += 200
@@ -253,9 +345,8 @@ def recompensa_final(personagem, tipo):
     tentar_subir_nivel(personagem)
     mostrar_status(personagem)
 
-# --------------------------------
 # Fluxo Principal
-# --------------------------------
+
 def main():
     personagem = criar_personagem()
     mercado(personagem)
