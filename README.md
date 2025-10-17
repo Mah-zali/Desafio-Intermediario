@@ -9,6 +9,10 @@ Este repositório reúne projetos acadêmicos e pessoais desenvolvidos por Maria
 - [E-mail](mailto:mariana.mazali@sempreceub.com)
 
 ---
+## Site
+- [Portfólio](https://portfoliohubmazali.my.canva.site/)
+
+---
 
 ## 📁 Estrutura
 
